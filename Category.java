@@ -20,15 +20,18 @@ public class Category
     {
         this.categoryID = categoryID;
     }
-
+    public void setCategoryName(String categoryName) 
+    {
+        this.categoryName = categoryName;
+    }
     HashMap<String,Product> getProducts()
     {
         return productList;
     }
 
-    Product getProductByID(String productID)
+    Product getProductByID(Category category, String productID)
     {
-        for(String i: productList.keySet())
+        for(String i: category.productList.keySet())
         {
             if(productList.get(i).productID==productID)
             {

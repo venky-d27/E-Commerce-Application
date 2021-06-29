@@ -4,11 +4,11 @@ public class Product
     String productName;
     double productPrice;
     int productAvailability;
-    String description;
+    String productDescription;
 
-    public String getDescription() 
+    public String getProductDescription() 
     {
-        return description;
+        return productDescription;
     }
     
     public int getProductAvailability() 
@@ -30,5 +30,28 @@ public class Product
     {
         return productPrice;
     }
+
+    public void setProductDescription(String ProductDescription)
+    {
+        this.productDescription = ProductDescription;
+    }
+
+    public void setProductAvailability(int productAvailability) 
+    {
+        this.productAvailability = productAvailability;
+    }
+    public void setProductID(String productID) 
+    {
+        this.productID = productID;
+    }
+    public void setProductName(String productName) 
+    {
+        this.productName = productName;
+    }
+    public void setProductPrice(double productPrice) 
+    {
+        this.productPrice = productPrice;
+    }
+    
     
 }
