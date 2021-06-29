@@ -65,4 +65,20 @@ public class Admin extends User
         }
         
     }
+    
+    public void modifyProduct(String categoryID,String productID,String productName,double productPrice,int productAvailability,String productDescription)
+    {
+        category=getCategoryByID(categoryID);
+        product=getProductByID(category, productID);
+        product.productName=productName;
+        product.productAvailability=productAvailability;
+        product.productDescription=productDescription;
+        product.productPrice=productPrice;
+        ECommerceSystem.shop.categoryList.get(categoryID).productList.put(productID,product);
+    }
+
+    public void modifyCategory(String categoryID,String categoryName)
+    {
+        ECommerceSystem.shop.categoryList.get(categoryID).categoryName=categoryName;
+    }
 }

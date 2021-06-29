@@ -31,7 +31,7 @@ public class ECommerceSystem
             {
                 do
                 {
-                    System.out.println("Enter the action to be performed:\n1.Add Category\n2.Add Product\n3.View Category\n4.View Product\n5.Generate Coupon\n6.View generated Coupons\n7.Exit");
+                    System.out.println("Enter the action to be performed:\n1.Add Category\n2.Add Product\n3.View Category\n4.View Product\n5.Generate Coupon\n6.View generated Coupons\n7.Modify Product\n8.Modify Category\n9.Exit");
                     userChoice=sc.nextInt();
                     switch(userChoice)
                     {
@@ -82,11 +82,36 @@ public class ECommerceSystem
                                 }
                                 break;
                         case 7:
+                                System.out.println("Enter the Category ID: ");
+                                categoryID=sc.next();
+                                System.out.println("Enter the Product ID: ");
+                                productID=sc.next();
+                                System.out.println("Enter the Product Name: ");
+                                productName=sc.next();
+                                System.out.println("Enter the Product Price: ");
+                                productPrice=sc.nextDouble();
+                                System.out.println("Enter the Product Availability: ");
+                                productAvailability=sc.nextInt();
+                                System.out.println("Enter the Product Description: ");
+                                productDescription=sc.next();
+                                admin.modifyProduct(categoryID, productID, productName, productPrice, productAvailability, productDescription);
+                                System.out.println("Modified Product Successfully!!!");
                                 break;
+                        case 8:
+                                System.out.println("Enter the Category ID: ");
+                                categoryID=sc.next();
+                                System.out.println("Enter the Category Name: ");
+                                categoryName=sc.next();
+                                admin.modifyCategory(categoryID, categoryName);
+                                System.out.println("Modified Category Successfully!!!");
+                                break;
+                        case 9:
+                                break;
+                                
 
                         default: System.out.println("Wrong Choice!!!");
                     }
-                }while(userChoice!=7);
+                }while(userChoice!=9);
             }
             else if(userType==2)
             {
