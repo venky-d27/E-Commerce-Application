@@ -1,10 +1,10 @@
 public class Product 
 {
-    String productID;
-    String productName;
-    double productPrice;
-    int productAvailability;
-    String productDescription;
+    private String productID;
+    private String productName;
+    private double productPrice;
+    private int productAvailability;
+    private String productDescription;
 
     public String getProductDescription() 
     {

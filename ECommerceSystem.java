@@ -4,8 +4,10 @@ public class ECommerceSystem
     public static Shop shop=new Shop();
     public static void main(String[] args) 
     { 
-        String userName;
-        String userPassword;
+        String customerName;
+        String customerID;
+        String customerPassword;
+        long customerMobileNumber;
         int userChoice,userStatus,userType;
         String categoryID;
         String categoryName;
@@ -21,6 +23,7 @@ public class ECommerceSystem
         Customer customer=new Customer(); 
         Product product;
         Category category;
+        Order order;
 
         Scanner sc=new Scanner(System.in);
         do
@@ -66,7 +69,7 @@ public class ECommerceSystem
                                 HashMap<String, Product> productList= admin.getAllProduct(categoryID);
                                 for(String i: productList.keySet())
                                 {
-                                    System.out.println(i+" "+productList.get(i).productName);
+                                    System.out.println(i+" "+productList.get(i).getProductName());
                                 }
                                 break;
                         case 5:
@@ -123,61 +126,103 @@ public class ECommerceSystem
                     {
                         case 1:
                                 System.out.println("Enter Username: ");
-                                userName=sc.next();
+                                customerName=sc.next();
                                 System.out.println("Enter User Password: ");
-                                userPassword=sc.next();
+                                customerPassword=sc.next();
+                                System.out.println("Enter User Mobile Number: ");
+                                customerMobileNumber=sc.nextLong();
                                 customer=new Customer();
-                                customer.createCustomer(userName, userPassword);
+                                customer.createCustomer(customerName, customerPassword,customerMobileNumber);
                                 admin.customerList.put(customer.getUserID(),customer);
-                                System.out.println(admin.customerList);
+                                System.out.println(customer.getUserID());
                                 break;
 
                         case 2:
-                                do
+                                System.out.println("Enter Your ID:  ");
+                                customerID=sc.next();
+                                System.out.println("Enter Your Password: ");
+                                customerPassword=sc.next();
+                                if(admin.customerSignIn(customerID,customerPassword))
                                 {
-                                    System.out.println("Enter the Choice:\n1.Add Product to Cart\n2.View Category\n3.View Product\n4.View Product Details\n5.Exit");
-                                    userChoice=sc.nextInt();
-                                    switch(userChoice)
+                                    do
                                     {
-                                        case 1: 
-                                                System.out.println("Enter the Category ID: ");
-                                                categoryID=sc.next();
-                                                System.out.println("Enter the Product ID: ");
-                                                productID=sc.next();
-                                                System.out.println("Enter the Product Quantity: ");
-                                                productQuantity=sc.nextInt();
-                                                customer.addProductToCart(categoryID, productID, productQuantity);
-                                                break;
+                                        System.out.println("Enter the Choice:\n1.Add Product to Cart\n2.View Category\n3.View Product\n4.View Product Details\n5.Remove Product from Cart\n6.Place Order\n7.View Previous Orders\n8.View Cart Products\n9.Exit");
+                                        userChoice=sc.nextInt();
+                                        switch(userChoice)
+                                        {
+                                            case 1: 
+                                                    System.out.println("Enter the Category ID: ");
+                                                    categoryID=sc.next();
+                                                    System.out.println("Enter the Product ID: ");
+                                                    productID=sc.next();
+                                                    System.out.println("Enter the Product Quantity: ");
+                                                    productQuantity=sc.nextInt();
+                                                    category=customer.getCategoryByID(categoryID);
+                                                    product=customer.getProductByID(category,productID);
+                                                    customer.addProductToCart(product, productQuantity);
+                                                    break;
 
-                                        case 2:
-                                            HashMap<String, Category> categoryList= customer.getAllCategory();
-                                            for(String i: categoryList.keySet())
-                                            {
-                                                System.out.println(i+" "+categoryList.get(i).categoryName);
-                                            }
-                                            break;
-
-                                        case 3:
-                                                System.out.println("Enter Catgeory ID: ");
-                                                categoryID=sc.next();
-                                                HashMap<String, Product> productList= customer.getAllProduct(categoryID);
-                                                for(String i: productList.keySet())
+                                            case 2:
+                                                HashMap<String, Category> categoryList= customer.getAllCategory();
+                                                for(String i: categoryList.keySet())
                                                 {
-                                                    System.out.println(i+" "+productList.get(i).productName);
+                                                    System.out.println(i+" "+categoryList.get(i).categoryName);
                                                 }
                                                 break;
-                                        case 4:
-                                                System.out.println("Enter the Category ID: ");
-                                                categoryID=sc.next();
-                                                System.out.println("Enter the Product ID: ");
-                                                productID=sc.next();
-                                                category=customer.getCategoryByID(categoryID);
-                                                product=customer.getProductByID(category, productID);
-                                                System.out.println("Product Details:\nProduct ID: "+product.productID+"\nProduct Name: "+product.productName+"\nProduct Price: "+product.productPrice+"\nProduct Description: "+product.productDescription);
-                                                break;
-                                    }
 
-                                }while(userChoice!=5);
+                                            case 3:
+                                                    System.out.println("Enter Catgeory ID: ");
+                                                    categoryID=sc.next();
+                                                    HashMap<String, Product> productList= customer.getAllProduct(categoryID);
+                                                    for(String i: productList.keySet())
+                                                    {
+                                                        System.out.println(i+" "+productList.get(i).getProductName());
+                                                    }
+                                                    break;
+                                            case 4:
+                                                    System.out.println("Enter the Category ID: ");
+                                                    categoryID=sc.next();
+                                                    System.out.println("Enter the Product ID: ");
+                                                    productID=sc.next();
+                                                    category=customer.getCategoryByID(categoryID);
+                                                    product=customer.getProductByID(category, productID);
+                                                    System.out.println("Product Details:\nProduct ID: "+product.getProductID()+"\nProduct Name: "+product.getProductName()+"\nProduct Price: "+product.getProductPrice()+"\nProduct Description: "+product.getProductDescription());
+                                                    break;
+                                            case 5:
+                                                    System.out.println("Enter the Category ID: ");
+                                                    categoryID=sc.next();
+                                                    System.out.println("Enter the Product ID: ");
+                                                    productID=sc.next();
+                                                    category=customer.getCategoryByID(categoryID);
+                                                    product=customer.getProductByID(category, productID);
+                                                    customer.removeProductFromCart(product);
+                                                    System.out.println("Product Successfully Removed from Cart!!!");
+                                            case 6:
+                                                    order=customer.placeOrder(customer.shoppingcart);
+                                                    customer.ordersHistory.put(order.getOrderID(), order);
+                                                    System.out.println(order.getTotalCost());
+                                                    break;
+                                            case 7:
+                                                    HashMap<String,Order> ordersHistory=customer.getOrdersHistory();
+                                                    for(String orderID: ordersHistory.keySet())
+                                                    {
+                                                        HashMap<Product,Integer> orderedProducts= ordersHistory.get(orderID).getOrderedProducts();
+                                                        for(Product orderedproduct: orderedProducts.keySet())
+                                                        {
+                                                            System.out.println("Product ID: "+orderedproduct.getProductID()+"\nProduct Name: "+orderedproduct.getProductName()+"\nProduct Price: "+orderedproduct.getProductPrice()+"\nProduct Description: "+orderedproduct.getProductDescription()+"\nProduct Quantity: "+orderedProducts.get(orderedproduct));
+                                                        }
+                                                    }
+                                                    break;
+                                            case 8:
+                                                    HashMap<Product,Integer> cartProducts=customer.shoppingcart.getCartProducts();
+                                                    for(Product i: cartProducts.keySet())
+                                                    {
+                                                        System.out.println("Product ID: "+i.getProductID()+"\nProduct Name: "+i.getProductName()+"\nProduct Price: "+i.getProductPrice()+"\nProduct Description: "+i.getProductDescription()+"\nProduct Quantity: "+cartProducts.get(i));
+                                                    }
+                                                    break;
+                                        }
+                                    }while(userChoice!=9);
+                                }
                                 break;
                         case 3:
                                 break;

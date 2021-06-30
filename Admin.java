@@ -5,7 +5,6 @@ public class Admin extends User
 {
     HashMap<String,Customer> customerList=new HashMap<String,Customer>();
     HashMap<String,Coupon> couponList=new HashMap<String,Coupon>();
-
     Coupon coupon;
     Category category = new Category();
     Product product = new Product();
@@ -59,7 +58,7 @@ public class Admin extends User
             product.setProductAvailability(productAvailability);
             product.setProductPrice(productPrice);
             product.setProductID(Integer.toString(ECommerceSystem.shop.categoryList.get(categoryID).productList.size()+1));
-            ECommerceSystem.shop.categoryList.get(categoryID).productList.put(product.productID,product);
+            ECommerceSystem.shop.categoryList.get(categoryID).productList.put(product.getProductID(),product);
             System.out.println("Product Successfully Addded!!!");
             // System.out.println(shop.categoryList.toString());
         }
@@ -70,10 +69,10 @@ public class Admin extends User
     {
         category=getCategoryByID(categoryID);
         product=getProductByID(category, productID);
-        product.productName=productName;
-        product.productAvailability=productAvailability;
-        product.productDescription=productDescription;
-        product.productPrice=productPrice;
+        product.setProductName(productName);
+        product.setProductAvailability(productAvailability);;
+        product.setProductDescription(productDescription);;
+        product.setProductPrice(productPrice);;
         ECommerceSystem.shop.categoryList.get(categoryID).productList.put(productID,product);
     }
 
@@ -81,4 +80,24 @@ public class Admin extends User
     {
         ECommerceSystem.shop.categoryList.get(categoryID).categoryName=categoryName;
     }
+
+    public boolean customerSignIn(String customerID, String customerPassword)
+    {
+        for(String i: customerList.keySet())
+        {
+            if(i.equals(customerID))
+            {
+                if(customerList.get(i).getUserPassword().equals(customerPassword))
+                {
+                    System.out.println("SignIn Successfull!!");
+                    return true;
+                }
+                System.out.println("Wrong Password!!!");
+                return false;
+            }
+        }
+        System.out.println("Account doesn't Exist!!! Check customer ID");
+        return false;
+    }
+
 }

@@ -29,16 +29,6 @@ public class Category
         return productList;
     }
 
-    Product getProductByID(Category category, String productID)
-    {
-        for(String i: category.productList.keySet())
-        {
-            if(productList.get(i).productID==productID)
-            {
-                return productList.get(i);
-            }
-        }
-        return null;
-    }
+    
 
 }
