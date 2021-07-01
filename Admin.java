@@ -5,6 +5,7 @@ public class Admin extends User
 {
     HashMap<String,Customer> customerList=new HashMap<String,Customer>();
     HashMap<String,Coupon> couponList=new HashMap<String,Coupon>();
+    HashMap<String,Order> customerOrders=new HashMap<String,Order>();
     Coupon coupon;
     Category category = new Category();
     Product product = new Product();
@@ -33,7 +34,10 @@ public class Admin extends User
         System.out.println("Category Successfully Addded!!!");
         // System.out.println(shop.categoryList.toString());
     }
-
+    public HashMap<String, Order> getCustomerOrders() 
+    {
+        return customerOrders;
+    }
     public boolean checkCategoryID(String categoryID)
     {
         for(String i: ECommerceSystem.shop.categoryList.keySet())

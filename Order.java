@@ -30,6 +30,9 @@ public class Order
     {
         return totalCost;
     }
+    public Customer getCustomer() {
+        return customer;
+    }
     public void setTotalCost(double totalCost) 
     {
         this.totalCost = totalCost;
@@ -37,6 +40,9 @@ public class Order
     public void setOrderedProducts(HashMap<Product, Integer> orderedProducts) 
     {
         this.orderedProducts = orderedProducts;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
     public void setOrderStatus(OrderStatus orderStatus) 
     {

@@ -34,7 +34,7 @@ public class ECommerceSystem
             {
                 do
                 {
-                    System.out.println("Enter the action to be performed:\n1.Add Category\n2.Add Product\n3.View Category\n4.View Product\n5.Generate Coupon\n6.View generated Coupons\n7.Modify Product\n8.Modify Category\n9.Exit");
+                    System.out.println("Enter the action to be performed:\n1.Add Category\n2.Add Product\n3.View Category\n4.View Product\n5.Generate Coupon\n6.View generated Coupons\n7.Modify Product\n8.Modify Category\n9.View Customers Orders\n10.Exit");
                     userChoice=sc.nextInt();
                     switch(userChoice)
                     {
@@ -109,12 +109,22 @@ public class ECommerceSystem
                                 System.out.println("Modified Category Successfully!!!");
                                 break;
                         case 9:
+                                HashMap<String,Order> customerOrders=admin.getCustomerOrders();
+                                for(String orderID: customerOrders.keySet())
+                                {
+                                    order=customerOrders.get(orderID);
+                                    System.out.println("Order ID: "+order.getOrderID()+"\nCustomer ID:"+order.getCustomer().getUserID());
+                                    for(Product orderedproduct: order.getOrderedProducts().keySet())
+                                    {
+                                        System.out.println("Product ID: "+orderedproduct.getProductID()+"\nProduct Name: "+orderedproduct.getProductName()+"\nProduct Price: "+orderedproduct.getProductPrice()+"\nProduct Description: "+orderedproduct.getProductDescription()+"\nProduct Quantity: "+order.getOrderedProducts().get(orderedproduct));
+                                    }
+                                }
                                 break;
                                 
 
                         default: System.out.println("Wrong Choice!!!");
                     }
-                }while(userChoice!=9);
+                }while(userChoice!=10);
             }
             else if(userType==2)
             {
@@ -198,8 +208,9 @@ public class ECommerceSystem
                                                     customer.removeProductFromCart(product);
                                                     System.out.println("Product Successfully Removed from Cart!!!");
                                             case 6:
-                                                    order=customer.placeOrder(customer.shoppingcart);
+                                                    order=customer.placeOrder(customer.shoppingcart,customer);
                                                     customer.ordersHistory.put(order.getOrderID(), order);
+                                                    admin.customerOrders.put(order.getOrderID(),order);
                                                     System.out.println(order.getTotalCost());
                                                     break;
                                             case 7:

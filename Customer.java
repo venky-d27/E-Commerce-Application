@@ -40,13 +40,14 @@ public class Customer extends User
         }
         return totalCost;
     }
-    public Order placeOrder(ShoppingCart shoppingcart)
+    public Order placeOrder(ShoppingCart shoppingcart,Customer customer)
     {
         order=new Order();
         String orderID=order.generateOrderID();
         order.setOrderID(orderID);
         order.setOrderTimestamp();
         order.setOrderStatus(OrderStatus.ORDERED);
+        order.setCustomer(customer);
         for(Product cartProduct: shoppingcart.cartProducts.keySet())
         {
             order.getOrderedProducts().put(cartProduct,shoppingcart.cartProducts.get(cartProduct));
