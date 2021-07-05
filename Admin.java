@@ -17,8 +17,8 @@ public class Admin extends User
         String couponCode= uuid.toString();
         coupon.setCouponCode(couponCode);
         coupon.setDiscountPercent(discountPercent); 
-        coupon.setCouponAvailed(false);
         couponList.put(couponCode,coupon);
+        System.out.println(couponCode);
     }
 
     public HashMap<String,Coupon> getCouponList()
@@ -47,6 +47,27 @@ public class Admin extends User
                 return true;
             }
         }
+        System.out.println("Wrong Category ID");
+        return false;
+    }
+
+    public boolean checkProductID(String categoryID,String productID)
+    {
+        if(ECommerceSystem.shop.categoryList.get(categoryID).getProducts().get(productID)!=null)
+        {
+            return true;
+        }
+        System.out.println("Wrong Product ID");
+        return false;
+    }
+
+    public boolean checkOrderID(String orderID)
+    {
+        if(customerOrders.get(orderID)!=null)
+        {
+            return true;
+        }
+        System.out.println("Wrong Order ID");
         return false;
     }
 
@@ -101,6 +122,43 @@ public class Admin extends User
             }
         }
         System.out.println("Account doesn't Exist!!! Check customer ID");
+        return false;
+    }
+
+    public void changeOrderStatus(String OrderID,OrderStatus orderStatus)
+    {
+        for(String i: customerOrders.keySet())
+        {
+            if(i.equals(OrderID))
+            {
+                customerOrders.get(OrderID).setOrderStatus(orderStatus);
+            }
+        }
+    }
+
+    public double verifyCoupon(String couponID)
+    {
+        for(String i: couponList.keySet())
+        {
+            if(i.equals(couponID))
+            {
+                return couponList.get(couponID).discountPercent;
+            }
+            
+        }
+        System.out.println("Wrong Coupon ID");
+        return 0.0;
+    }
+
+    public boolean checkAvailability(String categoryID,String productID,int quantity)
+    {
+        product=ECommerceSystem.shop.categoryList.get(categoryID).productList.get(productID);
+        if(product.getProductAvailability()>=quantity)
+        {
+            product.setProductAvailability(product.getProductAvailability()-quantity);
+            return true;
+        }
+        System.out.println("Only "+product.getProductAvailability()+"products are available!!!");
         return false;
     }
 

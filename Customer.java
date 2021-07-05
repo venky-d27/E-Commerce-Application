@@ -3,12 +3,13 @@ import java.util.HashMap;
 public class Customer extends User 
 {
     String orderID;
-    
+    double discountAmount;
     ShoppingCart shoppingcart=new ShoppingCart();
     Category category;
     Product product;
     HashMap<String,Order> ordersHistory=new HashMap<String,Order>();
     Order order;
+    Admin admin=new Admin();
     public HashMap<String, Order> getOrdersHistory() 
     {
         return ordersHistory;
@@ -42,22 +43,34 @@ public class Customer extends User
     }
     public Order placeOrder(ShoppingCart shoppingcart,Customer customer)
     {
-        order=new Order();
-        String orderID=order.generateOrderID();
-        order.setOrderID(orderID);
-        order.setOrderTimestamp();
-        order.setOrderStatus(OrderStatus.ORDERED);
-        order.setCustomer(customer);
-        for(Product cartProduct: shoppingcart.cartProducts.keySet())
+        if(shoppingcart.cartProducts.size()>0)
         {
-            order.getOrderedProducts().put(cartProduct,shoppingcart.cartProducts.get(cartProduct));
+            order=new Order();
+            String orderID=order.generateOrderID();
+            order.setOrderID(orderID);
+            order.setOrderTimestamp();
+            order.setOrderStatus(OrderStatus.ORDERED);
+            order.setCustomer(customer);
+            for(Product cartProduct: shoppingcart.cartProducts.keySet())
+            {
+                order.getOrderedProducts().put(cartProduct,shoppingcart.cartProducts.get(cartProduct));
+            }
+            order.setTotalCost(calculateTotalAmount(shoppingcart));
+            clearShoppingCart();
+            return order;
         }
-        order.setTotalCost(calculateTotalAmount(shoppingcart));
-        clearShoppingCart();
-        return order;
+        System.out.println("No Product in Shopping Cart!!!");
+        return null;
     }
     public void clearShoppingCart()
     {
         shoppingcart.cartProducts.clear();
+    }
+    public void applyCoupon(String couponID,Order order)
+    {
+        double discountPercent=admin.verifyCoupon(couponID);
+        double totalCost=order.getTotalCost();
+        totalCost-=totalCost*discountPercent;
+        order.setTotalCost(totalCost);
     }
 }

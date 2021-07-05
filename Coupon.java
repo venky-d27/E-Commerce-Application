@@ -2,7 +2,6 @@ public class Coupon
 {
     String couponCode;
     double discountPercent;  
-    boolean couponAvailed;
 
     public String getCouponCode() 
     {
@@ -14,15 +13,6 @@ public class Coupon
         return discountPercent;
     }
 
-    public boolean getCouponAvailed()
-    {
-        return couponAvailed;
-    }
-
-    public void setCouponAvailed(boolean couponAvailed) 
-    {
-        this.couponAvailed = couponAvailed;
-    }
 
     public void setCouponCode(String couponCode) 
     {
