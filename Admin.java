@@ -4,11 +4,11 @@ import java.util.UUID;
 public class Admin extends User
 {
     HashMap<String,Customer> customerList=new HashMap<String,Customer>();
-    HashMap<String,Coupon> couponList=new HashMap<String,Coupon>();
+    static HashMap<String,Coupon> couponList=new HashMap<String,Coupon>();
     HashMap<String,Order> customerOrders=new HashMap<String,Order>();
     Coupon coupon;
-    Category category = new Category();
-    Product product = new Product();
+    Category category;
+    Product product;
 
     public void generateCoupon(double discountPercent)
     {
@@ -136,19 +136,7 @@ public class Admin extends User
         }
     }
 
-    public double verifyCoupon(String couponID)
-    {
-        for(String i: couponList.keySet())
-        {
-            if(i.equals(couponID))
-            {
-                return couponList.get(couponID).discountPercent;
-            }
-            
-        }
-        System.out.println("Wrong Coupon ID");
-        return 0.0;
-    }
+    
 
     public boolean checkAvailability(String categoryID,String productID,int quantity)
     {

@@ -31,7 +31,7 @@ public class ECommerceSystem
         Scanner sc=new Scanner(System.in);
         do
         {
-            System.out.println("Enter type of User:\n1.Admin\n2.Customer");
+            System.out.println("Enter type of User:\n1.Admin\n2.Customer\n3.Exit");
             userType=sc.nextInt();
             if(userType==1)
             {
@@ -286,12 +286,13 @@ public class ECommerceSystem
                                                         customer.ordersHistory.put(order.getOrderID(), order);
                                                         admin.customerOrders.put(order.getOrderID(),order);
                                                         System.out.println(order.getTotalCost());
-                                                    }
+                                                        }
                                                     break;
                                             case 7:
                                                     HashMap<String,Order> ordersHistory=customer.getOrdersHistory();
                                                     for(String orderID: ordersHistory.keySet())
                                                     {
+                                                        System.out.println("Order ID: "+orderID+"\nTotal Amount: "+ordersHistory.get(orderID).getTotalCost());
                                                         HashMap<Product,Integer> orderedProducts= ordersHistory.get(orderID).getOrderedProducts();
                                                         for(Product orderedproduct: orderedProducts.keySet())
                                                         {

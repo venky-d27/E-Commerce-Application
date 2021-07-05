@@ -9,7 +9,7 @@ public class Customer extends User
     Product product;
     HashMap<String,Order> ordersHistory=new HashMap<String,Order>();
     Order order;
-    Admin admin=new Admin();
+
     public HashMap<String, Order> getOrdersHistory() 
     {
         return ordersHistory;
@@ -66,11 +66,24 @@ public class Customer extends User
     {
         shoppingcart.cartProducts.clear();
     }
+    public double verifyCoupon(String couponID)
+    {
+        for(String i: Admin.couponList.keySet())
+        {
+            if(i.equals(couponID))
+            {
+                return Admin.couponList.get(couponID).discountPercent;
+            }
+            
+        }
+        System.out.println("Wrong Coupon ID");
+        return 0.0;
+    }
     public void applyCoupon(String couponID,Order order)
     {
-        double discountPercent=admin.verifyCoupon(couponID);
+        double discountPercent=verifyCoupon(couponID);
         double totalCost=order.getTotalCost();
-        totalCost-=totalCost*discountPercent;
+        totalCost-=totalCost*discountPercent/100;
         order.setTotalCost(totalCost);
     }
 }
