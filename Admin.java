@@ -75,8 +75,6 @@ public class Admin extends User
     {
         
         // System.out.println(shop.categoryList.toString());
-        if(checkCategoryID(categoryID))
-        {
             product=new Product();
             product.setProductName(productName);
             product.setProductDescription(productDescription);
@@ -86,7 +84,7 @@ public class Admin extends User
             ECommerceSystem.shop.categoryList.get(categoryID).productList.put(product.getProductID(),product);
             System.out.println("Product Successfully Addded!!!");
             // System.out.println(shop.categoryList.toString());
-        }
+
         
     }
     

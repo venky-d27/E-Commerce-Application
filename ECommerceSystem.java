@@ -21,6 +21,7 @@ public class ECommerceSystem
         String productDescription;
         double discountPercent;
         String couponID;
+        int quantity;
 
         Admin admin=new Admin();
         Customer customer=new Customer(); 
@@ -90,7 +91,7 @@ public class ECommerceSystem
                                 HashMap<String,Coupon> couponList=admin.getCouponList();
                                 for(String i: couponList.keySet())
                                 {
-                                    System.out.println("Coupon Code: "+i+"\nDiscount Percent: "+couponList.get(i).discountPercent);
+                                    System.out.println("Coupon Code: "+i+"\nDiscount Percent: "+couponList.get(i).getDiscountPercent());
                                 }
                                 break;
                         case 7:
@@ -196,7 +197,7 @@ public class ECommerceSystem
                                 {
                                     do
                                     {
-                                        System.out.println("Enter the Choice:\n1.Add Product to Cart\n2.View Category\n3.View Product\n4.View Product Details\n5.Remove Product from Cart\n6.Place Order\n7.View Previous Orders\n8.View Cart Products\n9.Exit");
+                                        System.out.println("Enter the Choice:\n1.Add Product to Cart\n2.View Category\n3.View Product\n4.View Product Details\n5.Remove Product from Cart\n6.Place Order\n7.View Previous Orders\n8.View Cart Products\n9.Modify Quantity in Cart\n10.Exit");
                                         userChoice=sc.nextInt();
                                         switch(userChoice)
                                         {
@@ -292,7 +293,8 @@ public class ECommerceSystem
                                                     HashMap<String,Order> ordersHistory=customer.getOrdersHistory();
                                                     for(String orderID: ordersHistory.keySet())
                                                     {
-                                                        System.out.println("Order ID: "+orderID+"\nTotal Amount: "+ordersHistory.get(orderID).getTotalCost());
+                                                        order=ordersHistory.get(orderID);
+                                                        System.out.println("Order ID: "+orderID+"\nTotal Amount: "+order.getTotalCost()+"\nOrder Status: "+order.getOrderStatus()+"\nTimestamp: "+order.getOrderTimestamp());
                                                         HashMap<Product,Integer> orderedProducts= ordersHistory.get(orderID).getOrderedProducts();
                                                         for(Product orderedproduct: orderedProducts.keySet())
                                                         {
@@ -314,9 +316,29 @@ public class ECommerceSystem
                                                        System.out.println("Your Cart is Empty!!!"); 
                                                     }
                                                     break;
-                                            case 9: break;
+                                            case 9: 
+                                                System.out.println("Enter the Category ID: ");
+                                                categoryID=sc.next();
+                                                if(admin.checkCategoryID(categoryID))
+                                                {
+                                                    System.out.println("Enter the Product ID: ");
+                                                    productID=sc.next();
+                                                    if(admin.checkProductID(categoryID, productID))
+                                                    {
+                                                        category=customer.getCategoryByID(categoryID);
+                                                        product=customer.getProductByID(category, productID);
+                                                        System.out.println("Enter new quantity: ");
+                                                        quantity=sc.nextInt();
+                                                        customer.modifyProductQuantity(product, quantity);
+                                                        System.out.println("Product Quantity Successfully Modified!!!");
+                                                    }
+                                                }
+                                                break;
+                                            case 10:
+                                                break;
+                                            default: System.out.println("Wrong Choice!!!");
                                         }
-                                    }while(userChoice!=9);
+                                    }while(userChoice!=10);
                                 }
                                 break;
                         case 3:

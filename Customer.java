@@ -3,7 +3,6 @@ import java.util.HashMap;
 public class Customer extends User 
 {
     String orderID;
-    double discountAmount;
     ShoppingCart shoppingcart=new ShoppingCart();
     Category category;
     Product product;
@@ -72,7 +71,7 @@ public class Customer extends User
         {
             if(i.equals(couponID))
             {
-                return Admin.couponList.get(couponID).discountPercent;
+                return Admin.couponList.get(couponID).getDiscountPercent();
             }
             
         }
@@ -85,5 +84,9 @@ public class Customer extends User
         double totalCost=order.getTotalCost();
         totalCost-=totalCost*discountPercent/100;
         order.setTotalCost(totalCost);
+    }
+    public void modifyProductQuantity(Product product,int quantity)
+    {
+        shoppingcart.cartProducts.put(product,quantity);
     }
 }

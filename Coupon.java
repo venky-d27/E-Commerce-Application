@@ -1,7 +1,7 @@
 public class Coupon 
 {
-    String couponCode;
-    double discountPercent;  
+    private String couponCode;
+    private double discountPercent;  
 
     public String getCouponCode() 
     {
