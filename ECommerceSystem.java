@@ -48,7 +48,7 @@ public class ECommerceSystem
                                     System.out.println("Enter the Product Description: ");
                                     String productDescription=sc.next();
                                     admin.addProduct(categoryID, productName, productPrice, productAvailability, productDescription);
-                                    System.out.println("Product Successfully Addded!!!");
+                                    System.out.println("Product Successfully Added!!!");
                                 }
                                 else
                                 {
@@ -154,7 +154,7 @@ public class ECommerceSystem
                                 for(String orderID: customerOrders.keySet())
                                 {
                                     Order order=customerOrders.get(orderID);
-                                    System.out.println("Order ID: "+order.getOrderID()+"\nCustomer ID:"+order.getCustomer().getUserID());
+                                    System.out.println("Order ID: "+order.getOrderID()+"\nCustomer ID:"+order.getCustomer().getUserID()+"\nTotal Cost: "+order.getTotalCost());
                                     for(Product orderedproduct: order.getOrderedProducts().keySet())
                                     {
                                         System.out.println("Product ID: "+orderedproduct.getProductID()+"\nProduct Name: "+orderedproduct.getProductName()+"\nProduct Price: "+orderedproduct.getProductPrice()+"\nProduct Description: "+orderedproduct.getProductDescription()+"\nProduct Quantity: "+order.getOrderedProducts().get(orderedproduct));

@@ -4,7 +4,7 @@ public class Customer extends User
 {
     ShoppingCart shoppingcart=new ShoppingCart();
     HashMap<String,Order> ordersHistory=new HashMap<String,Order>();
-    ArrayList<Coupon> couponAvailedList = new ArrayList<Coupon>();
+    ArrayList<String> couponAvailedList = new ArrayList<String>();
 
     public HashMap<String, Order> getOrdersHistory() 
     {
@@ -64,7 +64,11 @@ public class Customer extends User
         {
             if(i.equals(couponID))
             {
-                return Admin.couponList.get(couponID).getDiscountPercent();
+                if(!couponAvailedList.contains(couponID))
+                {
+                    return Admin.couponList.get(couponID).getDiscountPercent();
+                }
+                throw new CouponError("Coupon Already Availed");
             }
             
         }
@@ -77,6 +81,7 @@ public class Customer extends User
         double totalCost=order.getTotalCost();
         totalCost-=totalCost*discountPercent/100;
         order.setTotalCost(totalCost);
+        couponAvailedList.add(couponID);
 
     }
     public void modifyProductQuantity(Product product,int quantity)
