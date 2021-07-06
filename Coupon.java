@@ -13,7 +13,6 @@ public class Coupon
         return discountPercent;
     }
 
-
     public void setCouponCode(String couponCode) 
     {
         this.couponCode = couponCode;

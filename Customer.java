@@ -1,13 +1,10 @@
-import java.util.HashMap;
+import java.util.*;
 
 public class Customer extends User 
 {
-    String orderID;
     ShoppingCart shoppingcart=new ShoppingCart();
-    Category category;
-    Product product;
     HashMap<String,Order> ordersHistory=new HashMap<String,Order>();
-    Order order;
+    ArrayList<Coupon> couponAvailedList = new ArrayList<Coupon>();
 
     public HashMap<String, Order> getOrdersHistory() 
     {
@@ -40,32 +37,28 @@ public class Customer extends User
         }
         return totalCost;
     }
-    public Order placeOrder(ShoppingCart shoppingcart,Customer customer)
+    public Order placeOrder(ShoppingCart shoppingCart,Customer customer) throws CartError
     {
-        if(shoppingcart.cartProducts.size()>0)
+        if(shoppingCart.cartProducts.size()>0)
         {
-            order=new Order();
+            Order order=new Order();
             String orderID=order.generateOrderID();
             order.setOrderID(orderID);
             order.setOrderTimestamp();
             order.setOrderStatus(OrderStatus.ORDERED);
             order.setCustomer(customer);
-            for(Product cartProduct: shoppingcart.cartProducts.keySet())
-            {
-                order.getOrderedProducts().put(cartProduct,shoppingcart.cartProducts.get(cartProduct));
-            }
-            order.setTotalCost(calculateTotalAmount(shoppingcart));
+            order.getOrderedProducts().putAll(new HashMap<>(shoppingCart.cartProducts));
+            order.setTotalCost(calculateTotalAmount(shoppingCart));
             clearShoppingCart();
             return order;
         }
-        System.out.println("No Product in Shopping Cart!!!");
-        return null;
+        throw new CartError("No Product in Shopping Cart!!!");
     }
     public void clearShoppingCart()
     {
         shoppingcart.cartProducts.clear();
     }
-    public double verifyCoupon(String couponID)
+    public double verifyCoupon(String couponID) throws CouponError
     {
         for(String i: Admin.couponList.keySet())
         {
@@ -75,15 +68,16 @@ public class Customer extends User
             }
             
         }
-        System.out.println("Wrong Coupon ID");
-        return 0.0;
+        throw new CouponError("Wrong Coupon ID");
+       
     }
-    public void applyCoupon(String couponID,Order order)
+    public void applyCoupon(String couponID,Order order) throws CouponError
     {
         double discountPercent=verifyCoupon(couponID);
         double totalCost=order.getTotalCost();
         totalCost-=totalCost*discountPercent/100;
         order.setTotalCost(totalCost);
+
     }
     public void modifyProductQuantity(Product product,int quantity)
     {

@@ -6,13 +6,11 @@ public class Admin extends User
     HashMap<String,Customer> customerList=new HashMap<String,Customer>();
     static HashMap<String,Coupon> couponList=new HashMap<String,Coupon>();
     HashMap<String,Order> customerOrders=new HashMap<String,Order>();
-    Coupon coupon;
-    Category category;
-    Product product;
+    
 
     public void generateCoupon(double discountPercent)
     {
-        coupon=new Coupon();
+        Coupon coupon=new Coupon();
         UUID uuid=UUID.randomUUID();
         String couponCode= uuid.toString();
         coupon.setCouponCode(couponCode);
@@ -27,11 +25,11 @@ public class Admin extends User
     }
     public void addCategory(String categoryName)
     {
-        category = new Category();
-        category.setCategoryID(Integer.toString(ECommerceSystem.shop.categoryList.size()+1));
+        Category category = new Category();
+        UUID uuid=UUID.randomUUID(); 
+        category.setCategoryID(uuid.toString());
         category.setCategoryName(categoryName);
         ECommerceSystem.shop.categoryList.put(category.categoryID,category);
-        System.out.println("Category Successfully Addded!!!");
         // System.out.println(shop.categoryList.toString());
     }
     public HashMap<String, Order> getCustomerOrders() 
@@ -40,25 +38,12 @@ public class Admin extends User
     }
     public boolean checkCategoryID(String categoryID)
     {
-        for(String i: ECommerceSystem.shop.categoryList.keySet())
-        {
-            if(i.equals(categoryID))
-            {
-                return true;
-            }
-        }
-        System.out.println("Wrong Category ID");
-        return false;
+        return ECommerceSystem.shop.categoryList.keySet().contains(categoryID);
     }
 
     public boolean checkProductID(String categoryID,String productID)
     {
-        if(ECommerceSystem.shop.categoryList.get(categoryID).getProducts().get(productID)!=null)
-        {
-            return true;
-        }
-        System.out.println("Wrong Product ID");
-        return false;
+        return ECommerceSystem.shop.categoryList.get(categoryID).getProducts().keySet().contains(productID);
     }
 
     public boolean checkOrderID(String orderID)
@@ -67,31 +52,28 @@ public class Admin extends User
         {
             return true;
         }
-        System.out.println("Wrong Order ID");
         return false;
     }
 
     public void addProduct(String categoryID,String productName,double productPrice,int productAvailability,String productDescription)
-    {
-        
+    {    
         // System.out.println(shop.categoryList.toString());
-            product=new Product();
+            Product product=new Product();
+            UUID uuid=UUID.randomUUID(); 
             product.setProductName(productName);
             product.setProductDescription(productDescription);
             product.setProductAvailability(productAvailability);
             product.setProductPrice(productPrice);
-            product.setProductID(Integer.toString(ECommerceSystem.shop.categoryList.get(categoryID).productList.size()+1));
+            product.setProductID(uuid.toString());
             ECommerceSystem.shop.categoryList.get(categoryID).productList.put(product.getProductID(),product);
-            System.out.println("Product Successfully Addded!!!");
+            
             // System.out.println(shop.categoryList.toString());
-
-        
     }
     
     public void modifyProduct(String categoryID,String productID,String productName,double productPrice,int productAvailability,String productDescription)
     {
-        category=getCategoryByID(categoryID);
-        product=getProductByID(category, productID);
+        Category category=getCategoryByID(categoryID);
+        Product product=getProductByID(category, productID);
         product.setProductName(productName);
         product.setProductAvailability(productAvailability);;
         product.setProductDescription(productDescription);;
@@ -104,7 +86,7 @@ public class Admin extends User
         ECommerceSystem.shop.categoryList.get(categoryID).categoryName=categoryName;
     }
 
-    public boolean customerSignIn(String customerID, String customerPassword)
+    public boolean customerSignIn(String customerID, String customerPassword) throws CustomerError
     {
         for(String i: customerList.keySet())
         {
@@ -112,15 +94,13 @@ public class Admin extends User
             {
                 if(customerList.get(i).getUserPassword().equals(customerPassword))
                 {
-                    System.out.println("SignIn Successfull!!");
                     return true;
                 }
-                System.out.println("Wrong Password!!!");
-                return false;
+                throw new CustomerError("Wrong Password!!!");
+
             }
         }
-        System.out.println("Account doesn't Exist!!! Check customer ID");
-        return false;
+        throw new CustomerError("Account doesn't Exist!!! Check customer ID");
     }
 
     public void changeOrderStatus(String OrderID,OrderStatus orderStatus)
@@ -136,16 +116,15 @@ public class Admin extends User
 
     
 
-    public boolean checkAvailability(String categoryID,String productID,int quantity)
+    public boolean checkAvailability(String categoryID,String productID,int quantity) throws ProductError
     {
-        product=ECommerceSystem.shop.categoryList.get(categoryID).productList.get(productID);
+        Product product=ECommerceSystem.shop.categoryList.get(categoryID).productList.get(productID);
         if(product.getProductAvailability()>=quantity)
         {
             product.setProductAvailability(product.getProductAvailability()-quantity);
             return true;
         }
-        System.out.println("Only "+product.getProductAvailability()+"products are available!!!");
-        return false;
+        throw new ProductError("Only "+product.getProductAvailability()+"products are available!!!");
     }
 
 }

@@ -1,39 +1,21 @@
 import java.util.*;
+
 public class ECommerceSystem
 {
     public static Shop shop=new Shop();
     public static void main(String[] args) 
     { 
-        String customerName;
-        String customerID;
-        String customerPassword;
-        long customerMobileNumber;
-        int userChoice,userStatus,userType;
-        String categoryID;
-        String categoryName;
-        String productID;
-        String productName;
-        String orderId;
-        int orderStatus;
-        int productQuantity;
-        double productPrice;
-        int productAvailability;
-        String productDescription;
-        double discountPercent;
-        String couponID;
-        int quantity;
 
         Admin admin=new Admin();
         Customer customer=new Customer(); 
-        Product product;
-        Category category;
-        Order order;
 
         Scanner sc=new Scanner(System.in);
+        int userType;
         do
         {
             System.out.println("Enter type of User:\n1.Admin\n2.Customer\n3.Exit");
             userType=sc.nextInt();
+            int userChoice,userStatus;
             if(userType==1)
             {
                 do
@@ -44,24 +26,39 @@ public class ECommerceSystem
                     {
                         case 1: 
                                 System.out.println("Enter the Category Name: ");
-                                categoryName=sc.next();
+                                String categoryName=sc.next();
                                 admin.addCategory(categoryName);
+                                System.out.println("Category Successfully Addded!!!");
                                 break;
                         case 2:
+                            try 
+                            {    
                                 System.out.println("Enter the Category ID: ");
-                                categoryID=sc.next();
+                                String categoryID=sc.next();
                                 if(admin.checkCategoryID(categoryID))
                                 {
                                     System.out.println("Enter the Product Name: ");
-                                    productName=sc.next();
+                                    String productName=sc.next();
                                     System.out.println("Enter the Product Price: ");
-                                    productPrice=sc.nextDouble();
+                                    double productPrice=sc.nextDouble();
+                                    ECommerceSystem.validateProductPrice(productPrice);
                                     System.out.println("Enter the Product Availability: ");
-                                    productAvailability=sc.nextInt();
+                                    int productAvailability=sc.nextInt();
+                                    ECommerceSystem.validateProductAvailability(productAvailability);
                                     System.out.println("Enter the Product Description: ");
-                                    productDescription=sc.next();
+                                    String productDescription=sc.next();
                                     admin.addProduct(categoryID, productName, productPrice, productAvailability, productDescription);
+                                    System.out.println("Product Successfully Addded!!!");
                                 }
+                                else
+                                {
+                                    System.out.println("Wrong Category ID");
+                                }
+                            }
+                            catch(ProductError error)
+                            {
+                                System.out.println(error.getMessage());
+                            }
                                 break;
                         case 3:
                                 HashMap<String, Category> categoryList= admin.getAllCategory();
@@ -72,7 +69,7 @@ public class ECommerceSystem
                                 break;
                         case 4:
                                 System.out.println("Enter Catgeory ID: ");
-                                categoryID=sc.next();
+                                String categoryID=sc.next();
                                 if(admin.checkCategoryID(categoryID))
                                 {
                                     HashMap<String, Product> productList= admin.getAllProduct(categoryID);
@@ -81,10 +78,14 @@ public class ECommerceSystem
                                         System.out.println(i+" "+productList.get(i).getProductName());
                                     }
                                 }
+                                else
+                                {
+                                    System.out.println("Wrong Category ID");
+                                }
                                 break;
                         case 5:
                                 System.out.println("Enter discount Percent: ");
-                                discountPercent=sc.nextDouble();
+                                double discountPercent=sc.nextDouble();
                                 admin.generateCoupon(discountPercent);
                                 break;
                         case 6: 
@@ -95,27 +96,43 @@ public class ECommerceSystem
                                 }
                                 break;
                         case 7:
-                                
+                            try
+                            {
                                 System.out.println("Enter the Category ID: ");
                                 categoryID=sc.next();
                                 if(admin.checkCategoryID(categoryID))
                                 {
                                     System.out.println("Enter the Product ID: ");
-                                    productID=sc.next();
+                                    String productID=sc.next();
                                     if(admin.checkProductID(categoryID, productID))
                                     {
                                         System.out.println("Enter the Product Name: ");
-                                        productName=sc.next();
+                                        String productName=sc.next();
                                         System.out.println("Enter the Product Price: ");
-                                        productPrice=sc.nextDouble();
+                                        double productPrice=sc.nextDouble();
+                                        ECommerceSystem.validateProductPrice(productPrice);
                                         System.out.println("Enter the Product Availability: ");
-                                        productAvailability=sc.nextInt();
+                                        int productAvailability=sc.nextInt();
+                                        ECommerceSystem.validateProductAvailability(productAvailability);
                                         System.out.println("Enter the Product Description: ");
-                                        productDescription=sc.next();
+                                        String productDescription=sc.next();
                                         admin.modifyProduct(categoryID, productID, productName, productPrice, productAvailability, productDescription);
                                         System.out.println("Modified Product Successfully!!!");
                                     }
+                                    else
+                                    {
+                                        System.out.print("Wrong Product ID");
+                                    }
                                 }
+                                else
+                                {
+                                    System.out.println("Wrong Category ID");
+                                }
+                            }
+                            catch(ProductError error)
+                            {
+                                System.out.println(error.getMessage());
+                            }
                                 break;
                         case 8:
                                 System.out.println("Enter the Category ID: ");
@@ -127,12 +144,16 @@ public class ECommerceSystem
                                     admin.modifyCategory(categoryID, categoryName);
                                     System.out.println("Modified Category Successfully!!!");
                                 }
+                                else
+                                {
+                                    System.out.println("Wrong Category ID");
+                                }
                                 break;
                         case 9:
                                 HashMap<String,Order> customerOrders=admin.getCustomerOrders();
                                 for(String orderID: customerOrders.keySet())
                                 {
-                                    order=customerOrders.get(orderID);
+                                    Order order=customerOrders.get(orderID);
                                     System.out.println("Order ID: "+order.getOrderID()+"\nCustomer ID:"+order.getCustomer().getUserID());
                                     for(Product orderedproduct: order.getOrderedProducts().keySet())
                                     {
@@ -142,11 +163,11 @@ public class ECommerceSystem
                                 break;
                         case 10:
                                 System.out.println("Enter the Order ID: ");
-                                orderId=sc.next();
+                                String orderId=sc.next();
                                 if(admin.checkOrderID(orderId))
                                 {
                                     System.out.println("Enter the Order Status:\n1.Ordered\n2.Shipped\n3.Delivered");
-                                    orderStatus=sc.nextInt();
+                                    int orderStatus=sc.nextInt();
                                     switch(orderStatus)
                                     {
                                         case 1: admin.changeOrderStatus(orderId,OrderStatus.ORDERED);
@@ -159,6 +180,10 @@ public class ECommerceSystem
                                                 break;
                                         default:System.out.print("Wrong Order Status");        
                                     }
+                                }
+                                else
+                                {
+                                    System.out.println("Wrong Order ID");
                                 }
                                 break;
                         case 11: break;          
@@ -176,25 +201,38 @@ public class ECommerceSystem
                     switch(userStatus)
                     {
                         case 1:
+                            try
+                            {
+                     
                                 System.out.println("Enter Username: ");
-                                customerName=sc.next();
+                                String customerName=sc.next();
                                 System.out.println("Enter User Password: ");
-                                customerPassword=sc.next();
+                                String customerPassword=sc.next();
+                                ECommerceSystem.validatePassword(customerPassword);
                                 System.out.println("Enter User Mobile Number: ");
-                                customerMobileNumber=sc.nextLong();
+                                long customerMobileNumber=sc.nextLong();
+                                ECommerceSystem.validateUserMobileNumber(customerMobileNumber);
                                 customer=new Customer();
                                 customer.createCustomer(customerName, customerPassword,customerMobileNumber);
                                 admin.customerList.put(customer.getUserID(),customer);
                                 System.out.println(customer.getUserID());
+                            }
+                            catch(CustomerError error)
+                            {
+                                System.out.println(error.getMessage());
+                            }
                                 break;
 
                         case 2:
                                 System.out.println("Enter Your ID:  ");
-                                customerID=sc.next();
+                                String customerID=sc.next();
                                 System.out.println("Enter Your Password: ");
-                                customerPassword=sc.next();
+                                String customerPassword=sc.next();
+                                try
+                                {
                                 if(admin.customerSignIn(customerID,customerPassword))
                                 {
+                                    System.out.println("SignIn Successfull!!");
                                     do
                                     {
                                         System.out.println("Enter the Choice:\n1.Add Product to Cart\n2.View Category\n3.View Product\n4.View Product Details\n5.Remove Product from Cart\n6.Place Order\n7.View Previous Orders\n8.View Cart Products\n9.Modify Quantity in Cart\n10.Exit");
@@ -202,24 +240,40 @@ public class ECommerceSystem
                                         switch(userChoice)
                                         {
                                             case 1: 
+                                                try{
                                                     System.out.println("Enter the Category ID: ");
-                                                    categoryID=sc.next();
+                                                    String categoryID=sc.next();
                                                     if(admin.checkCategoryID(categoryID))
                                                     {
                                                         System.out.println("Enter the Product ID: ");
-                                                        productID=sc.next();
+                                                        String productID=sc.next();
                                                         if(admin.checkProductID(categoryID, productID))
                                                         {
                                                             System.out.println("Enter the Product Quantity: ");
-                                                            productQuantity=sc.nextInt();
+                                                            int productQuantity=sc.nextInt();
+                                                            ECommerceSystem.validateProductAvailability(productQuantity);
+                
                                                             if(admin.checkAvailability(categoryID, productID, productQuantity))
                                                             {
-                                                                category=customer.getCategoryByID(categoryID);
-                                                                product=customer.getProductByID(category,productID);
+                                                                Category category=customer.getCategoryByID(categoryID);
+                                                                Product product=customer.getProductByID(category,productID);
                                                                 customer.addProductToCart(product, productQuantity);
                                                             }
                                                         }
+                                                        else
+                                                        {
+                                                            System.out.print("Wrong Product ID");
+                                                        }
                                                     }
+                                                    else
+                                                    {
+                                                        System.out.println("Wrong Category ID");
+                                                    }
+                                                }
+                                                catch(ProductError error)
+                                                {
+                                                    System.out.println(error.getMessage());
+                                                }
                                                     break;
 
                                             case 2:
@@ -232,7 +286,7 @@ public class ECommerceSystem
 
                                             case 3:
                                                     System.out.println("Enter Catgeory ID: ");
-                                                    categoryID=sc.next();
+                                                    String categoryID=sc.next();
                                                     if(admin.checkCategoryID(categoryID))
                                                     {
                                                         HashMap<String, Product> productList= customer.getAllProduct(categoryID);
@@ -241,6 +295,10 @@ public class ECommerceSystem
                                                             System.out.println(i+" "+productList.get(i).getProductName());
                                                         }
                                                     }
+                                                    else
+                                                    {
+                                                        System.out.println("Wrong Category ID");
+                                                    }
                                                     break;
                                             case 4:
                                                     System.out.println("Enter the Category ID: ");
@@ -248,13 +306,21 @@ public class ECommerceSystem
                                                     if(admin.checkCategoryID(categoryID))
                                                     {
                                                         System.out.println("Enter the Product ID: ");
-                                                        productID=sc.next();
-                                                        category=customer.getCategoryByID(categoryID);
+                                                        String productID=sc.next();
+                                                        Category category=customer.getCategoryByID(categoryID);
                                                         if(admin.checkProductID(categoryID, productID))
                                                         {
-                                                            product=customer.getProductByID(category, productID);
+                                                            Product product=customer.getProductByID(category, productID);
                                                             System.out.println("Product Details:\nProduct ID: "+product.getProductID()+"\nProduct Name: "+product.getProductName()+"\nProduct Price: "+product.getProductPrice()+"\nProduct Description: "+product.getProductDescription());
                                                         }
+                                                        else
+                                                        {
+                                                            System.out.print("Wrong Product ID");
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        System.out.println("Wrong Category ID");
                                                     }
                                                     break;
                                             case 5:
@@ -263,37 +329,45 @@ public class ECommerceSystem
                                                     if(admin.checkCategoryID(categoryID))
                                                     {
                                                         System.out.println("Enter the Product ID: ");
-                                                        productID=sc.next();
+                                                        String productID=sc.next();
                                                         if(admin.checkProductID(categoryID, productID))
                                                         {
-                                                            category=customer.getCategoryByID(categoryID);
-                                                            product=customer.getProductByID(category, productID);
+                                                            Category category=customer.getCategoryByID(categoryID);
+                                                            Product product=customer.getProductByID(category, productID);
                                                             customer.removeProductFromCart(product);
                                                             System.out.println("Product Successfully Removed from Cart!!!");
                                                         }
                                                     }
                                             case 6:
-                                                    order=customer.placeOrder(customer.shoppingcart,customer);
-                                                    if(order!=null)
+                                                    try
                                                     {
+                                                        Order order=customer.placeOrder(customer.shoppingcart,customer);
                                                         System.out.println("Wanna apply Coupon?\n1.Yes\n2.No");
                                                         int couponChoice=sc.nextInt();
                                                         if(couponChoice==1)
                                                         {
                                                             System.out.println("Enter the Coupon ID: ");
-                                                            couponID=sc.next();
+                                                            String couponID=sc.next();
                                                             customer.applyCoupon(couponID,order);
                                                         }
                                                         customer.ordersHistory.put(order.getOrderID(), order);
                                                         admin.customerOrders.put(order.getOrderID(),order);
                                                         System.out.println(order.getTotalCost());
-                                                        }
+                                                    }
+                                                    catch(CartError error)
+                                                    {
+                                                        System.out.println(error.getMessage());
+                                                    }
+                                                    catch(CouponError error)
+                                                    {
+                                                        System.out.println(error.getMessage());
+                                                    }
                                                     break;
                                             case 7:
                                                     HashMap<String,Order> ordersHistory=customer.getOrdersHistory();
                                                     for(String orderID: ordersHistory.keySet())
                                                     {
-                                                        order=ordersHistory.get(orderID);
+                                                        Order order=ordersHistory.get(orderID);
                                                         System.out.println("Order ID: "+orderID+"\nTotal Amount: "+order.getTotalCost()+"\nOrder Status: "+order.getOrderStatus()+"\nTimestamp: "+order.getOrderTimestamp());
                                                         HashMap<Product,Integer> orderedProducts= ordersHistory.get(orderID).getOrderedProducts();
                                                         for(Product orderedproduct: orderedProducts.keySet())
@@ -322,16 +396,24 @@ public class ECommerceSystem
                                                 if(admin.checkCategoryID(categoryID))
                                                 {
                                                     System.out.println("Enter the Product ID: ");
-                                                    productID=sc.next();
+                                                    String productID=sc.next();
                                                     if(admin.checkProductID(categoryID, productID))
                                                     {
-                                                        category=customer.getCategoryByID(categoryID);
-                                                        product=customer.getProductByID(category, productID);
+                                                        Category category=customer.getCategoryByID(categoryID);
+                                                        Product product=customer.getProductByID(category, productID);
                                                         System.out.println("Enter new quantity: ");
-                                                        quantity=sc.nextInt();
+                                                        int quantity=sc.nextInt();
                                                         customer.modifyProductQuantity(product, quantity);
                                                         System.out.println("Product Quantity Successfully Modified!!!");
                                                     }
+                                                    else
+                                                    {
+                                                        System.out.print("Wrong Product ID");
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    System.out.print("Wrong PCategory ID");
                                                 }
                                                 break;
                                             case 10:
@@ -340,13 +422,59 @@ public class ECommerceSystem
                                         }
                                     }while(userChoice!=10);
                                 }
+                                }
+                                catch(CustomerError error)
+                                {
+                                    System.out.println(error.getMessage());
+                                }
                                 break;
                         case 3:
                                 break;
                         default: System.out.print("Wrong Choice!!!");
                     }
+                    
                 }while(userStatus!=3);
             }
         }while(userType!=3);
+    }
+
+    public static void validateUserMobileNumber(long customerMobileNumber) throws CustomerError
+    {
+        if(customerMobileNumber<0)
+        {
+            throw new CustomerError("Mobile Number Cannot be negative");
+        }
+        if(Long.toString(customerMobileNumber).length()!=10)
+        {
+            throw new CustomerError("Length of the number must be 10");
+        }
+    }
+
+    public static void validatePassword(String customerPassword) throws CustomerError
+    {
+        if(customerPassword==null)
+        {
+            throw new CustomerError("Password cannot be empty!!!");
+        }
+        
+        if(customerPassword.length()<6)
+        {
+            throw new CustomerError("Password must be of length 6 or above!!!");
+        }
+    }
+
+    public static void validateProductAvailability(int productAvailability) throws ProductError
+    {
+        if(productAvailability<0)
+        {
+            throw new ProductError("Value cannot be negative!!!");
+        }
+    }
+    public static void validateProductPrice(double productPrice) throws ProductError
+    {
+        if(productPrice<0.0)
+        {
+            throw new ProductError("Price cannot be negative!!!");
+        }
     }
 }
